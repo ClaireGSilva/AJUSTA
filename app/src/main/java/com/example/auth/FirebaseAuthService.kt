@@ -73,8 +73,10 @@ object FirebaseAuthService {
         return try {
             val credentialManager = CredentialManager.create(context)
 
-            // Web client ID for Google Sign-In
-            val serverClientId = "343905960327-google-signin.apps.googleusercontent.com"
+            // Web client ID for Google Sign-In (configured via .env / BuildConfig)
+            val serverClientId = BuildConfig.GOOGLE_WEB_CLIENT_ID.ifBlank {
+                "343905960327-google-signin.apps.googleusercontent.com"
+            }
 
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)

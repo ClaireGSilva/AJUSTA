@@ -101,10 +101,11 @@ Armazena as ordens de serviço cadastradas na aba **Ateliê Pro**.
 
 ---
 
-## 2. Banco em Nuvem: Google Cloud Firestore (Opcional)
+## 2. Banco em Nuvem: Google Cloud Firestore (Híbrido / Sincronizado)
 
 * **Provedor:** Firebase Firestore
 * **Modo de Operação:** Espelhamento sob demanda acionado pelo usuário autenticado.
+* **Modelo de Segurança:** Zero-Trust (acesso estritamente isolado por UID do usuário).
 
 ### Estrutura de Documentos no Firestore:
 
@@ -118,5 +119,27 @@ users/
            └── {orderId}      -> Objeto serializado compatível com ProfessionalOrder
 ```
 
-* **Regras de Segurança Básicas:** Leituras e gravações vinculadas estritamente ao `request.auth.uid == userId`.
-* **Desacoplamento:** Se o Firebase não estiver configurado no projeto (ou o arquivo `google-services.json` estiver ausente), o app continua operando no modo local com Room sem falhas em tempo de execução.
+### Regras de Segurança (`firestore.rules`)
+O arquivo oficial `firestore.rules` já está incluído na raiz do projeto pronto para implantação:
+
+```javascript
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Apenas o proprietário autenticado pode ler e gravar seus próprios dados
+    match /users/{userId}/{document=**} {
+      allow read, write: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}
+```
+
+### Como o Novo Comprador Conecta Seu Próprio Firestore
+1. Acesse o [Firebase Console](https://console.firebase.google.com/) no seu projeto.
+2. No menu lateral, acesse **Build > Firestore Database** e clique em **Criar banco de dados**.
+3. Selecione a localização mais adequada (ex: `southamerica-east1` para Brasil ou `us-east1`) e crie no modo de produção.
+4. Na aba **Regras (Rules)**, cole o conteúdo do arquivo `firestore.rules` da raiz deste projeto e clique em **Publicar**.
+5. Baixe seu `google-services.json` no console e salve em `/app/google-services.json` (substituindo o arquivo de exemplo `app/google-services.json.template`).
+6. Pronto! A sincronização em nuvem estará 100% funcional sem qualquer intervenção ou dependência de contas prévias.
+
+* **Desacoplamento e Resiliência:** Se o Firebase não estiver configurado no projeto (ou o arquivo `google-services.json` estiver ausente), o app continua operando perfeitamente no modo local com Room sem nenhuma falha em tempo de execução.

@@ -50,6 +50,11 @@ Antes da primeira compilação, você deve criar o arquivo `.env`:
    ```
    *(Nota: O Secrets Gradle Plugin lerá automaticamente esse arquivo e injetará a chave em `BuildConfig.GEMINI_API_KEY` em tempo de compilação).*
 
+4. *(Opcional)* Se for utilizar autenticação Google e nuvem Firestore:
+   * Copie o arquivo oficial `google-services.json` do seu projeto Firebase para `app/google-services.json` (veja o modelo `app/google-services.json.template`).
+   * Adicione `GOOGLE_WEB_CLIENT_ID=seu-id-web.apps.googleusercontent.com` no seu arquivo `.env`.
+   * Caso não queira configurar o Firebase agora, não se preocupe: o projeto possui `MissingGoogleServicesStrategy.WARN` e opera perfeitamente no modo 100% offline com Room Database.
+
 ---
 
 ## 🔨 4. Compilação via Linha de Comando (CLI)

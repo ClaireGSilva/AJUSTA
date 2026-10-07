@@ -17,7 +17,7 @@
 | **Compose Navigation** | `2.8.9` | Apache 2.0 | Sistema de rotas e navegação entre telas no Compose. |
 | **CameraX (Camera2, Lifecycle, View, Core)** | `1.5.0` | Apache 2.0 | Captura fotográfica de vestuário e controle de câmera nativa. |
 | **Room Runtime & Room KTX** | `2.7.0` | Apache 2.0 | ORM e banco de dados SQLite local offline-first. |
-| **Google KSP (Kotlin Symbol Processing)** | `2.3.5` | Apache 2.0 | Processamento de anotações do Room e Moshi em alta velocidade. |
+| **Google KSP (Kotlin Symbol Processing)** | `2.3.12` | Apache 2.0 | Processamento de anotações do Room em alta velocidade (atualizado para resolver bug NPE do IntelliJ/AWT). |
 | **Firebase BOM** | `34.17.0` | Apache 2.0 | Gerenciamento de dependências da suíte Firebase. |
 | **Firebase Auth & Firestore** | BOM | Apache 2.0 | Autenticação Google e sincronização opcional em nuvem. |
 | **AndroidX Credential Manager** | `1.5.0` | Apache 2.0 | Autenticação biométrica e Google Sign-In nativo. |

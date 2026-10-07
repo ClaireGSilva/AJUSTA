@@ -48,5 +48,14 @@
 
 ### 🛡️ Transferibilidade & Segurança
 * Isolamento total de chaves e variáveis via Secrets Gradle Plugin e `.env.example`.
+* Parametrização dinâmica de `GOOGLE_WEB_CLIENT_ID` via `BuildConfig.GOOGLE_WEB_CLIENT_ID` com fallback seguro, eliminando client IDs fixos no código Kotlin.
+* Adição dos templates oficiais de credenciais `app/google-services.json.template` e `google-services.json.template`.
+* Adição do arquivo de regras `firestore.rules` (Zero-Trust por UID de usuário) pronto para publicação no Firebase Console.
 * Remoção completa de referências a contas pessoais ou e-mails no código-fonte.
 * Zero dependências de bibliotecas obsoletas ou licenças copyleft restritivas.
+* Expansão da documentação com guia passo a passo para o novo proprietário vincular seu próprio projeto do Firebase sem necessidade de credenciais do vendedor.
+
+---
+
+### 🐛 Corrigido
+* **Atualização do KSP (Kotlin Symbol Processing):** Atualizado de `2.3.5` para `2.3.12` e desativação do gerador não utilizado `moshi.kotlin.codegen`, eliminando o erro de NullPointerException no `ApplicationManager` em threads AWT/IDE e acelerando o tempo de compilação.

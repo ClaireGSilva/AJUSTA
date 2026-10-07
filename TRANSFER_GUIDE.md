@@ -55,17 +55,25 @@ Para publicar sob sua conta própria da Google Play Console:
 1. Crie uma keystore de upload exclusiva para sua empresa (veja o comando em [DEPLOYMENT.md](./DEPLOYMENT.md)).
 2. Configure as variáveis de ambiente `KEYSTORE_PATH`, `STORE_PASSWORD` e `KEY_PASSWORD` no seu servidor de CI/CD ou computador de build.
 
-### Passo 4: Conectar ao seu Próprio Firebase (Opcional)
-Se desejar habilitar login Google e sincronização em nuvem:
-1. Crie um projeto no [Firebase Console](https://console.firebase.google.com).
-2. Registre o seu `applicationId`.
-3. Baixe o arquivo `google-services.json` gerado pelo Google e substitua o arquivo em `app/google-services.json`.
+### Passo 4: Conectar ao seu Próprio Firebase (Opcional para Nuvem)
+Se desejar habilitar login Google federado e backup em nuvem Firestore:
+1. Crie um projeto próprio no [Firebase Console](https://console.firebase.google.com).
+2. Registre o seu `applicationId` Android (`com.aistudio.ajusta.crwpmt` ou o seu novo ID).
+3. Adicione o hash SHA-1 da sua máquina/keystore no console do Firebase.
+4. Baixe o `google-services.json` oficial e copie para `app/google-services.json` (substituindo o modelo `app/google-services.json.template`).
+5. Ative **Authentication > Google** e copie o **Web Client ID** para o arquivo `.env`:
+   ```properties
+   GOOGLE_WEB_CLIENT_ID=seu-id-web.apps.googleusercontent.com
+   ```
+6. Ative o **Firestore Database** e publique as regras prontas de `firestore.rules`.
+7. O app compilará e sincronizará automaticamente com seu próprio projeto do Firebase. Zero dependência de contas ou acessos do desenvolvedor anterior.
 
 ---
 
 ## 🔒 3. Auditoria de Desacoplamento e Privacidade
 
 * **Contas Pessoais da Criadora:** O projeto foi rigorosamente auditado para garantir que **não existe nenhuma amarração a e-mails pessoais, tokens secretos ou contas privadas** no repositório.
+* **Templates Prontos:** Arquivos modelo (`.env.example`, `app/google-services.json.template`, `google-services.json.template`, `firestore.rules`) foram preparados especificamente para que o comprador tenha 100% de clareza e autonomia.
 * **Custos Recorrentes Ocultos:** O app opera em modo local com zero custo de servidores para o proprietário. O único serviço externo é a API do Gemini, que possui cota gratuita para desenvolvimento e cobrança pay-as-you-go em produção.
 
 ---

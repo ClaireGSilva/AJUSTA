@@ -61,3 +61,46 @@
 * **Solução:**
   * Acesse **Settings (Preferences) > Build, Execution, Deployment > Build Tools > Gradle > Gradle JDK**.
   * Selecione **Embedded JDK (JDK 17 ou JDK 21)**.
+
+---
+
+## 🔐 6. Firebase, Autenticação e Sincronização em Nuvem
+
+### ❌ Erro: `GetCredentialException: Developer Error (10)` ou `12500` no Google Sign-In
+* **Causa:** O certificado digital (SHA-1) da sua chave de compilação não está cadastrado no Firebase Console, ou há divergência no `applicationId`.
+* **Solução:**
+  1. Obtenha o SHA-1 da sua máquina executando no terminal:
+     ```bash
+     keytool -list -v -keystore debug.keystore -alias androiddebugkey -storepass android -keypass android
+     ```
+  2. Acesse o [Firebase Console](https://console.firebase.google.com) > **Configurações do Projeto** > seu app Android.
+  3. Clique em **Adicionar impressão digital** e cole o valor SHA-1.
+  4. Baixe novamente o `google-services.json` atualizado e substitua em `app/google-services.json`.
+  5. Certifique-se de que o `GOOGLE_WEB_CLIENT_ID` no `.env` foi copiado de **Authentication > Sign-in method > Google > Configuração do SDK da Web**.
+
+---
+
+### ⚠️ Aviso no Console do Gradle: `File google-services.json is missing`
+* **Causa:** O projeto utiliza `MissingGoogleServicesStrategy.WARN` para permitir desenvolvimento 100% offline e independente sem exigir conta de nuvem imediata.
+* **Solução:**
+  * Este aviso é normal e intencional. O aplicativo executa perfeitamente em modo local-first utilizando o banco de dados Room SQLite.
+  * Para silenciar o aviso e ativar os recursos em nuvem, siga o passo a passo em [CONFIGURATION.md](./CONFIGURATION.md) copiando o seu `google-services.json` oficial para a pasta `/app`.
+
+---
+
+### ❌ Erro no Firestore: `PERMISSION_DENIED: Missing or insufficient permissions`
+* **Causa:** As regras de segurança do Firestore no console não foram publicadas ou não autorizam a operação.
+* **Solução:**
+  1. No Firebase Console, acesse **Build > Firestore Database > Regras (Rules)**.
+  2. Cole o conteúdo de `firestore.rules` da raiz do projeto:
+     ```javascript
+     rules_version = '2';
+     service cloud.firestore {
+       match /databases/{database}/documents {
+         match /users/{userId}/{document=**} {
+           allow read, write: if request.auth != null && request.auth.uid == userId;
+         }
+       }
+     }
+     ```
+  3. Clique em **Publicar**. Certifique-se de que o usuário está autenticado antes de invocar `FirestoreSyncService`.
